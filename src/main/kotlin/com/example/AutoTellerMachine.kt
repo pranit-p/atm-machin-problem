@@ -1,7 +1,14 @@
 package com.example
 
-class AutoTellerMachine {
+
+class AutoTellerMachine(val printer:Printer,val banking:BankingService){
     fun withdraw(amount: Int) {
-        //WRITE CODE HERE.
+        try{
+            banking.withdraw(amount)
+            printer.print("Amount withdrawn Successfully")
+        }catch(e:Exception){
+            printer.print("Amount is not withdrawn Successfully")
+        }
+
     }
 }
