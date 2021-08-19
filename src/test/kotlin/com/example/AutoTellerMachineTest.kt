@@ -2,7 +2,10 @@ package com.example
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
-
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import org.junit.jupiter.api.Assertions.assertEquals
 
 
 class AutoTellerMachineTest: StringSpec({
@@ -20,13 +23,18 @@ class AutoTellerMachineTest: StringSpec({
         AutoTellerMachine(fakePrinter,fakeBankingService).withdraw(10)
         fakePrinter.messageString shouldBe "Amount is not withdrawn Successfully"
     }
-    "should print a receipt if money is withdrawn successfully using mokk" {
-        val fakePrinter = FakePrinter("",0)
-        val fakeBankingService = FakeBankingService(false)
+    "test should print a receipt if money is withdrawn successfully using mokk" {
+        val fakePrinter =  mockk<Printer>()
+        val fakeBankingService = mockk<BankingService>()
+        every { fakeBankingService.withdraw(10) } returns Unit
         AutoTellerMachine(fakePrinter,fakeBankingService).withdraw(10)
-        fakePrinter.messageString shouldBe "Amount is not withdrawn Successfully"
+
+        verify { fakePrinter.print("Amount withdrawn Successfully") }
+        fakePrinter.messageString shouldBe "Amount withdrawn Successfully"
+
+
     }
-    
+
 
 })
 
